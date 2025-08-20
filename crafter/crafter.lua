@@ -1,0 +1,71 @@
+local craftingGrid = { 1, 2, 3, 5, 6, 7, 9, 10, 11 }
+local nonCraftingSlots = { 4, 8, 12, 13, 14, 15, 16 }
+local recipies = {}
+
+for s in { 'inferium', 'tertium', 'imperium', 'prudentium', 'supremium' } do
+  recipies[string.format("%s_ingot", s)] = {
+    [1] = 'mysticalagriculture:prosperity_ingot',
+    [2] = string.format('mysticalagriculture:%s_essence', s),
+    [5] = string.format('mysticalagriculture:%s_essence', s)
+  }
+  recipies[string.format("%s_gem", s)] = {
+    [1] = 'mysticalagriculture:prosperity_gemstone',
+    [2] = string.format('mysticalagriculture:%s_essence', s),
+    [5] = string.format('mysticalagriculture:%s_essence', s)
+  }
+end
+
+local function has_value(tab, val)
+  for index, value in ipairs(tab) do
+    if value == val then
+      return true
+    end
+  end
+
+  return false
+end
+
+local function clearCraftingGrid(itemsToCraftWith)
+  local filledSlots = {}
+  for k in craftingGrid do
+    turtle.select(k)
+    local itemDetail = turtle.getItemDetail()
+    if itemDetail ~= nil then
+      if has_value(itemsToCraftWith, itemDetail) then
+        table.insert(filledSlots, itemDetail.name)
+        turtle.transferTo(craftingGrid(#filledSlots))
+      else
+        turtle.drop()
+      end
+    end
+  end
+end
+
+local function findItem(name)
+  for k = 1, 16 do
+    if turtle.getItemDetail(k).name == name then
+      return k
+    end
+  end
+  return 0
+end
+
+local function assembleRecipie(name)
+  local recipie = recipies[name]
+  if recipie == nil then
+    error('Recipie not known')
+  end
+
+  for position, itemName in ipairs(recipie) do
+    local spot = findItem(itemName)
+    if spot == 0 then
+      warn('item not present', itemName)
+      return itemName
+    end
+    turtle.select(spot)
+    turtle.transferTo(position)
+  end
+  return nil
+end
+
+assembleRecipie('inferium_ingot')
