@@ -43,7 +43,8 @@ end
 
 local function findItem(name)
   for k = 1, 16 do
-    if turtle.getItemDetail(k).name == name then
+    local item = turtle.getItemDetail(k)
+    if item ~= nil and item.name == name then
       return k
     end
   end
