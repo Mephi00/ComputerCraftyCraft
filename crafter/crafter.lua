@@ -54,13 +54,14 @@ end
 local function assembleRecipie(name)
   local recipie = recipies[name]
   if recipie == nil then
-    write('Recipie not known')
+    term.write('Recipie not known')
+    return
   end
 
   for position, itemName in ipairs(recipie) do
     local spot = findItem(itemName)
     if spot == 0 then
-      write('item not present', itemName)
+      term.write('item not present', itemName)
       return itemName
     end
     turtle.select(spot)
