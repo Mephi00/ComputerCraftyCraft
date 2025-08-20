@@ -2,7 +2,7 @@ local craftingGrid = { 1, 2, 3, 5, 6, 7, 9, 10, 11 }
 local nonCraftingSlots = { 4, 8, 12, 13, 14, 15, 16 }
 local recipies = {}
 
-for s in { 'inferium', 'tertium', 'imperium', 'prudentium', 'supremium' } do
+for _, s in ipairs({ 'inferium', 'tertium', 'imperium', 'prudentium', 'supremium' }) do
   recipies[string.format("%s_ingot", s)] = {
     [1] = 'mysticalagriculture:prosperity_ingot',
     [2] = string.format('mysticalagriculture:%s_essence', s),
@@ -27,7 +27,7 @@ end
 
 local function clearCraftingGrid(itemsToCraftWith)
   local filledSlots = {}
-  for k in craftingGrid do
+  for _, k in ipairs(craftingGrid) do
     turtle.select(k)
     local itemDetail = turtle.getItemDetail()
     if itemDetail ~= nil then
