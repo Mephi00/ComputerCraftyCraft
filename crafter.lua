@@ -52,6 +52,7 @@ local function dumpInventory()
   local turns = 0
   while not present or block.tags['c:chests'] == nil do
     if turns > 4 then
+      print('couldnt find chest')
       return false
     end
 
@@ -136,7 +137,10 @@ function craft(recipieName)
     os.exit()
   end
 
-  dumpInventory()
+  if not dumpInventory() then
+    print('FAILURE: Cannot dump inventory')
+    os.exit()
+  end
 
   local requiredItems = getItemsForRecipie(recipie)
   if not getItems(requiredItems) then
