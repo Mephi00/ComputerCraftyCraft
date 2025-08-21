@@ -8,7 +8,7 @@ local craftingGrid = { 1, 2, 3, 5, 6, 7, 9, 10, 11 }
 local nonCraftingSlots = { 4, 8, 12, 13, 14, 15, 16 }
 
 local function findDirection()
-  local present, block = turtle.inspectDown()
+  local present, block = turtle.inspect()
   local turns = 0
   while present do
     print(present)
@@ -18,7 +18,7 @@ local function findDirection()
 
     turtle.turnLeft()
     turns = turns + 1
-    present, block = turtle.inspectDown()
+    present, block = turtle.inspect()
   end
 
   return true
