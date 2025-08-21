@@ -1,41 +1,66 @@
+require 'utils.logging_utils'
+require 'recipies.lua'
+require 'crafter.material_gatherer'
+
+local startBlock = 'minecraft:purple_wool'
+
 local craftingGrid = { 1, 2, 3, 5, 6, 7, 9, 10, 11 }
 local nonCraftingSlots = { 4, 8, 12, 13, 14, 15, 16 }
-local recipies = {}
 
-for _, s in ipairs({ 'inferium', 'tertium', 'imperium', 'prudentium', 'supremium' }) do
-  recipies[string.format("%s_ingot", s)] = {
-    [1] = 'mysticalagriculture:prosperity_ingot',
-    [2] = string.format('mysticalagriculture:%s_essence', s),
-    [5] = string.format('mysticalagriculture:%s_essence', s)
-  }
-  recipies[string.format("%s_gem", s)] = {
-    [1] = 'mysticalagriculture:prosperity_gemstone',
-    [2] = string.format('mysticalagriculture:%s_essence', s),
-    [5] = string.format('mysticalagriculture:%s_essence', s)
-  }
-end
+local function findStartBlock()
+  local block = turtle.inspectDown()
+  local turnedAround = false
+  while block.name ~= startBlock do
+    if not turtle.forward() then
+      if turnedAround then
+        return false
+      end
 
-local function dump(o)
-  if type(o) == 'table' then
-    local s = '{ '
-    for k, v in pairs(o) do
-      if type(k) ~= 'number' then k = '"' .. k .. '"' end
-      s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
-    end
-    return s .. '} '
-  else
-    return tostring(o)
-  end
-end
-
-local function has_value(tab, val)
-  for index, value in ipairs(tab) do
-    if value == val then
-      return true
+      turtle.turnLeft()
+      turtle.turnLeft()
+      turnedAround = true
     end
   end
+  return true
+end
 
-  return false
+local function findDirection()
+  local present, block = turtle.inspectDown()
+  local turns = 0
+  while not block do
+    if turns > 4 then
+      return false
+    end
+
+    turtle.turnLeft()
+    turns = turns + 1
+  end
+
+  for k = 1, 16 do
+    turtle.select(k)
+    turtle.drop()
+  end
+
+  return true
+end
+
+local function dumpInventory()
+  findStartBlock()
+
+  local present, block = turtle.inspectDown()
+  local turns = 0
+  while block.tags['c:chests'] ~= nil do
+    if turns > 4 then
+      return false
+    end
+
+    turtle.turnLeft()
+    turns = turns + 1
+  end
+
+
+
+  return true
 end
 
 local function clearCraftingGrid(itemsToCraftWith)
@@ -64,24 +89,14 @@ local function findItem(name)
   return 0
 end
 
-local function assembleRecipie(name)
-  local recipie = recipies[name]
-  if recipie == nil then
-    print('Recipie not known')
-    return
-  end
-
+local function assembleRecipie(recipie)
   local placedItems = {}
 
-  print('using recipie', dump(recipie))
-
-  for position, itemName in ipairs(recipie) do
+  for position, itemName in pairs(recipie) do
     local spot = findItem(itemName)
     if spot == 0 then
       print('item not present', itemName)
-      return itemName
     end
-    print('placing:', itemName)
     turtle.select(spot)
     local placedItem = placedItems[itemName]
     if placedItem ~= nil then
@@ -93,7 +108,35 @@ local function assembleRecipie(name)
       placedItems[itemName] = { position }
     end
   end
-  return nil
+  return true
 end
 
-assembleRecipie('inferium_ingot')
+function craft(recipieName)
+  local recipie = recipies[recipieName]
+  if recipie == nil then
+    print('Recipie not known')
+    return
+  end
+
+  if not findStartBlock() then
+    print(string.format('FAILURE: Cannot find start block %s', startBlock))
+    exit()
+  end
+
+  if not findDirection() then
+    print('FAILURE: Cannot find a way out from the start')
+    exit()
+  end
+
+  local requiredItems = getItemsForRecipie(recipie)
+  if not getItems(requiredItems) then
+    print('Could not craft recipie')
+    return false
+  end
+
+  assembleRecipie(recipie)
+  turtle.craft()
+  dumpInventory()
+end
+
+craft('inferium_ingot')
