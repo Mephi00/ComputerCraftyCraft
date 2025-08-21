@@ -59,6 +59,7 @@ local function dumpInventory()
     turns = turns + 1
   end
 
+  print('found chest')
 
   for k = 1, 16 do
     turtle.select(k)
