@@ -15,6 +15,19 @@ for _, s in ipairs({ 'inferium', 'tertium', 'imperium', 'prudentium', 'supremium
   }
 end
 
+local function dump(o)
+  if type(o) == 'table' then
+    local s = '{ '
+    for k, v in pairs(o) do
+      if type(k) ~= 'number' then k = '"' .. k .. '"' end
+      s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
+    end
+    return s .. '} '
+  else
+    return tostring(o)
+  end
+end
+
 local function has_value(tab, val)
   for index, value in ipairs(tab) do
     if value == val then
@@ -60,7 +73,7 @@ local function assembleRecipie(name)
 
   local placedItems = {}
 
-  print('using recipie', recipie)
+  print('using recipie', dump(recipie))
 
   for position, itemName in ipairs(recipie) do
     local spot = findItem(itemName)
