@@ -60,6 +60,8 @@ local function assembleRecipie(name)
 
   local placedItems = {}
 
+  print('using recipie', recipie)
+
   for position, itemName in ipairs(recipie) do
     local spot = findItem(itemName)
     if spot == 0 then
