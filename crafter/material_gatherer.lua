@@ -1,4 +1,5 @@
 require 'utils.array_utils'
+require 'crafter.constants'
 
 local block_mapping = {
   ['minecraft:coal'] = 'minecraft:black_wool',
@@ -44,7 +45,7 @@ function getItems(itemNames)
     if present then
       local nameIndex = has_value(blockNames, block.name)
       if nameIndex ~= nil then
-        turtle.select(#itemNames - (#blockNames - 1))
+        turtle.select(nonCraftingSlots[#blockNames])
         if not turnToPickUp() then
           print(string.format('Could not find chest next to %s', block.name))
           return false

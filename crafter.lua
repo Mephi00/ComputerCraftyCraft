@@ -5,7 +5,6 @@ require 'crafter.material_gatherer'
 local startBlock = 'minecraft:purple_wool'
 
 local craftingGrid = { 1, 2, 3, 5, 6, 7, 9, 10, 11 }
-local nonCraftingSlots = { 4, 8, 12, 13, 14, 15, 16 }
 
 local function findDirection()
   local present, block = turtle.inspect()
@@ -133,6 +132,8 @@ function craft(recipieName)
     print('FAILURE: Cannot find a way out from the start')
     os.exit()
   end
+
+  dumpInventory()
 
   local requiredItems = getItemsForRecipie(recipie)
   if not getItems(requiredItems) then
