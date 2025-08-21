@@ -7,24 +7,6 @@ local startBlock = 'minecraft:purple_wool'
 local craftingGrid = { 1, 2, 3, 5, 6, 7, 9, 10, 11 }
 local nonCraftingSlots = { 4, 8, 12, 13, 14, 15, 16 }
 
-local function findStartBlock()
-  local present, block = turtle.inspectDown()
-  local turnedAround = false
-  while not present or block.name ~= startBlock do
-    if not turtle.forward() then
-      if turnedAround then
-        return false
-      end
-
-      turtle.turnLeft()
-      turtle.turnLeft()
-      turnedAround = true
-    end
-    present, block = turtle.inspectDown()
-  end
-  return true
-end
-
 local function findDirection()
   local present, block = turtle.inspectDown()
   local turns = 0
@@ -42,6 +24,28 @@ local function findDirection()
     turtle.drop()
   end
 
+  return true
+end
+
+local function findStartBlock()
+  if not findDirection() then
+    return false
+  end
+
+  local present, block = turtle.inspectDown()
+  local turnedAround = false
+  while not present or block.name ~= startBlock do
+    if not turtle.forward() then
+      if turnedAround then
+        return false
+      end
+
+      turtle.turnLeft()
+      turtle.turnLeft()
+      turnedAround = true
+    end
+    present, block = turtle.inspectDown()
+  end
   return true
 end
 
