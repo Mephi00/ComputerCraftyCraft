@@ -48,7 +48,7 @@ end
 local function dumpInventory()
   findStartBlock()
 
-  local present, block = turtle.inspectDown()
+  local present, block = turtle.inspect()
   local turns = 0
   while not present or block.tags['c:chests'] == nil do
     if turns > 4 then
@@ -58,6 +58,7 @@ local function dumpInventory()
 
     turtle.turnLeft()
     turns = turns + 1
+    present, block = turtle.inspect()
   end
 
   print('found chest')
