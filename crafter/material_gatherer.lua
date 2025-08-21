@@ -8,8 +8,8 @@ local block_mapping = {
   ['mysticalagriculture:tertium_essence'] = 'minecraft:orange_wool',
   ['mysticalagriculture:imperium_essence'] = 'minecraft:blue_wool',
   ['mysticalagriculture:supremium_essence'] = 'minecraft:red_wool',
-  ['mysticalagriculture:prosperity_gemstone'] = 'minecraft:white_wool',
-  ['mysticalagriculture:prosperity_ingot'] = 'minecraft:light_gray_wool'
+  ['mysticalagriculture:prosperity_ingot'] = 'minecraft:white_wool',
+  ['mysticalagriculture:prosperity_gemstone'] = 'minecraft:light_gray_wool'
 }
 
 local function turnToPickUp()
