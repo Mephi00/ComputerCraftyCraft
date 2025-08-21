@@ -1,5 +1,5 @@
 require 'utils.logging_utils'
-require 'recipies.lua'
+require 'crafter.recipies'
 require 'crafter.material_gatherer'
 
 local startBlock = 'minecraft:purple_wool'
