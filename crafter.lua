@@ -17,11 +17,7 @@ local function findDirection()
 
     turtle.turnLeft()
     turns = turns + 1
-  end
-
-  for k = 1, 16 do
-    turtle.select(k)
-    turtle.drop()
+    present, block = turtle.inspectDown()
   end
 
   return true
@@ -61,6 +57,12 @@ local function dumpInventory()
 
     turtle.turnLeft()
     turns = turns + 1
+  end
+
+
+  for k = 1, 16 do
+    turtle.select(k)
+    turtle.drop()
   end
 
   return true
@@ -123,12 +125,12 @@ function craft(recipieName)
 
   if not findStartBlock() then
     print(string.format('FAILURE: Cannot find start block %s', startBlock))
-    exit()
+    os.exit()
   end
 
   if not findDirection() then
     print('FAILURE: Cannot find a way out from the start')
-    exit()
+    os.exit()
   end
 
   local requiredItems = getItemsForRecipie(recipie)
