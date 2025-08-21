@@ -10,7 +10,7 @@ local nonCraftingSlots = { 4, 8, 12, 13, 14, 15, 16 }
 local function findDirection()
   local present, block = turtle.inspectDown()
   local turns = 0
-  while not present do
+  while present do
     if turns > 4 then
       return false
     end
