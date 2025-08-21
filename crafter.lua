@@ -11,6 +11,7 @@ local function findDirection()
   local present, block = turtle.inspectDown()
   local turns = 0
   while present do
+    print(present)
     if turns > 4 then
       return false
     end
