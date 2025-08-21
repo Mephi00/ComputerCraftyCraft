@@ -39,21 +39,19 @@ function getItems(itemNames)
   end
 
   while #blockNames > 0 do
-    local block = turtle.inspectDown()
-    if block == nil then
-      print('Found empty block, pls fix setup')
-      return false
-    end
+    local present, block = turtle.inspectDown()
 
-    local nameIndex = has_value(blockNames, block.name)
-    if nameIndex ~= nil then
-      turtle.select(#itemNames - (#blockNames - 1))
-      if not turnToPickUp() then
-        print(string.format('Could not find chest next to %s', block.name))
-        return false
+    if present then
+      local nameIndex = has_value(blockNames, block.name)
+      if nameIndex ~= nil then
+        turtle.select(#itemNames - (#blockNames - 1))
+        if not turnToPickUp() then
+          print(string.format('Could not find chest next to %s', block.name))
+          return false
+        end
+
+        table.remove(blockNames, nameIndex)
       end
-
-      table.remove(blockNames, nameIndex)
     end
 
     if not turtle.forward() then

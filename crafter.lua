@@ -8,9 +8,9 @@ local craftingGrid = { 1, 2, 3, 5, 6, 7, 9, 10, 11 }
 local nonCraftingSlots = { 4, 8, 12, 13, 14, 15, 16 }
 
 local function findStartBlock()
-  local block = turtle.inspectDown()
+  local present, block = turtle.inspectDown()
   local turnedAround = false
-  while block.name ~= startBlock do
+  while not present or block.name ~= startBlock do
     if not turtle.forward() then
       if turnedAround then
         return false
@@ -20,6 +20,7 @@ local function findStartBlock()
       turtle.turnLeft()
       turnedAround = true
     end
+    present, block = turtle.inspectDown()
   end
   return true
 end
@@ -27,7 +28,7 @@ end
 local function findDirection()
   local present, block = turtle.inspectDown()
   local turns = 0
-  while not block do
+  while not present do
     if turns > 4 then
       return false
     end
@@ -49,7 +50,7 @@ local function dumpInventory()
 
   local present, block = turtle.inspectDown()
   local turns = 0
-  while block.tags['c:chests'] ~= nil do
+  while not present or block.tags['c:chests'] == nil do
     if turns > 4 then
       return false
     end
@@ -57,8 +58,6 @@ local function dumpInventory()
     turtle.turnLeft()
     turns = turns + 1
   end
-
-
 
   return true
 end
