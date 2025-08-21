@@ -65,6 +65,8 @@ local function dumpInventory()
     turtle.drop()
   end
 
+  findDirection()
+
   return true
 end
 
