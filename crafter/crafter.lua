@@ -58,6 +58,8 @@ local function assembleRecipie(name)
     return
   end
 
+  local placedItems = {}
+
   for position, itemName in ipairs(recipie) do
     local spot = findItem(itemName)
     if spot == 0 then
@@ -66,7 +68,15 @@ local function assembleRecipie(name)
     end
     print('placing:', itemName)
     turtle.select(spot)
-    turtle.transferTo(position)
+    local placedItem = placedItems[itemName]
+    if placedItem ~= nil then
+      local itemAmount = turtle.getItemDetail(placedItem[#placedItem]).count
+      turtle.transferTo(position, itemAmount / 2)
+      table.insert(placedItem, position)
+    else
+      turtle.transferTo(position)
+      placedItems[itemName] = { position }
+    end
   end
   return nil
 end
